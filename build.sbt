@@ -1,8 +1,12 @@
 val commonsVersion   = "0.5.0"
+val akkaHttpVersion  = "10.0.10"
 val scalaTestVersion = "3.0.4"
+val sbtIoVersion     = "1.0.1"
 
 lazy val shaclValidator = "ch.epfl.bluebrain.nexus" %% "shacl-validator" % commonsVersion
+lazy val akkaHttpCore   = "com.typesafe.akka"       %% "akka-http-core"  % akkaHttpVersion
 lazy val scalaTest      = "org.scalatest"           %% "scalatest"       % scalaTestVersion
+lazy val sbtIo          = "org.scala-sbt"           %% "io"              % sbtIoVersion
 
 lazy val workbench = project
   .in(file("modules/workbench"))
@@ -10,7 +14,12 @@ lazy val workbench = project
     common,
     name := "nexus-workbench",
     moduleName := "nexus-workbench",
-    libraryDependencies ++= Seq(shaclValidator, scalaTest % Test)
+    libraryDependencies ++= Seq(
+      shaclValidator,
+      akkaHttpCore,
+      sbtIo,
+      scalaTest
+    )
   )
 
 lazy val plugin = project
@@ -41,6 +50,7 @@ lazy val noPublish = Seq(
 )
 
 lazy val common = Seq(
+  coverageFailOnMinimum := false,
   homepage := Some(new URL("https://github.com/BlueBrain/sbt-nexus-workbench")),
   licenses := Seq(("Apache 2.0", new URL("https://github.com/BlueBrain/sbt-nexus-workbench/blob/master/LICENSE")))
 )
