@@ -1,0 +1,6 @@
+{
+  "@context": "{{base}}/contexts/common",
+  "schema:value": 3,
+  "schema:unitCode": "km",
+  "schema:unitText": "Kilometers"
+}

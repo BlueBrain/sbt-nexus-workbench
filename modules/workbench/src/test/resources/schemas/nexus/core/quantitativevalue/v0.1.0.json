@@ -1,0 +1,48 @@
+{
+  "@context": [
+    "{{base}}/contexts/shacl",
+    {
+      "this": "{{base}}/schemas/nexus/core/quantitativevalue/v0.1.0/shapes/",
+      "schemaquantvalue": "{{base}}/schemas/nexus/schemaorg/quantitativevalue/v0.1.0/shapes/"
+    }
+  ],
+  "@type": "owl:Ontology",
+  "imports": [
+    "{{base}}/schemas/nexus/schemaorg/quantitativevalue/v0.1.0"
+  ],
+  "shapes": [
+    {
+      "@id": "this:QuantitativeValueShape",
+      "@type": "sh:NodeShape",
+      "targetSubjectsOf": "schema:value",
+      "and": [
+        {
+          "node": "schemaquantvalue:QuantitativeValueShape"
+        },
+        {
+          "property": [
+            {
+              "path": "schema:value",
+              "minCount": 1,
+              "maxCount": 1
+            }
+          ]
+        },
+        {
+          "xone": [
+            {
+              "path": "schema:unitCode",
+              "minCount": 1,
+              "maxCount": 1
+            },
+            {
+              "path": "schema:unitText",
+              "minCount": 1,
+              "maxCount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
