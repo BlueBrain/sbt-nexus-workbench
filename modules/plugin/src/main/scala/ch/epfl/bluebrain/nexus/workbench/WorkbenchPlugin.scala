@@ -17,6 +17,10 @@ object WorkbenchPlugin extends AutoPlugin {
       "base-uri-token",
       "The token to replace when loading resources."
     )
+    val workbenchVersion = SettingKey[String](
+      "workbench-version",
+      "The version of the workbench to be added as a library dependency."
+    )
   }
   object autoImport extends Keys
   import autoImport._
@@ -24,7 +28,7 @@ object WorkbenchPlugin extends AutoPlugin {
   override lazy val projectSettings = Seq(
     baseUri := "http://localhost/v0",
     baseUriToken := "{{base}}",
-    libraryDependencies += organization.value %% "nexus-workbench" % version.in(ThisBuild).value % Test,
+    libraryDependencies += "ch.epfl.bluebrain.nexus" %% "nexus-workbench" % workbenchVersion.value % Test,
     sourceGenerators in Test += {
       Def.task {
         val targetDir = (sourceManaged in Test).value
