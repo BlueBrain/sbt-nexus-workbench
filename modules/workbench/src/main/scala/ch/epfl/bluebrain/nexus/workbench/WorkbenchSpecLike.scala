@@ -18,7 +18,10 @@ trait WorkbenchSpecLike extends WordSpecLike with ValidationMatchers {
 
   def baseDir: String
 
+  def testDir: String
+
   private val bd        = new File(baseDir).getAbsoluteFile
+  private val td        = new File(testDir).getAbsoluteFile
   private val base      = Uri(baseUri)
   private val loader    = new ResourceLoader[Try](Uri(baseUri), Map(baseUriToken -> baseUri))
   private val resolver  = new ClasspathResolver[Try](loader)
@@ -36,10 +39,10 @@ trait WorkbenchSpecLike extends WordSpecLike with ValidationMatchers {
   }
 
   private def valid(schemaRef: SchemaRef): List[InstanceRef] = {
-    val finder = bd * "data" * "*" * "*" * "*" * "*" * "*.json"
+    val finder = td * "data" * "*" * "*" * "*" * "*" * "*.json"
     finder.get.foldLeft(List.empty[InstanceRef]) {
       case (acc, e) =>
-        val string = e.getAbsolutePath.substring(bd.getAbsolutePath.length + 1, e.getAbsolutePath.length - 5)
+        val string = e.getAbsolutePath.substring(td.getAbsolutePath.length + 1, e.getAbsolutePath.length - 5)
         val uri    = Uri(s"$base/$string")
         val ref    = InstanceRef(base, uri)
         if (ref.stripped.startsWith(s"/data/${schemaRef.stripped}")) ref :: acc
@@ -48,10 +51,10 @@ trait WorkbenchSpecLike extends WordSpecLike with ValidationMatchers {
   }
 
   private def invalid(schemaRef: SchemaRef): List[InstanceRef] = {
-    val finder = bd * "invalid" * "*" * "*" * "*" * "*" * "*.json"
+    val finder = td * "invalid" * "*" * "*" * "*" * "*" * "*.json"
     finder.get.foldLeft(List.empty[InstanceRef]) {
       case (acc, e) =>
-        val string = e.getAbsolutePath.substring(bd.getAbsolutePath.length + 1, e.getAbsolutePath.length - 5)
+        val string = e.getAbsolutePath.substring(td.getAbsolutePath.length + 1, e.getAbsolutePath.length - 5)
         val uri    = Uri(s"$base/$string")
         val ref    = InstanceRef(base, uri)
         if (ref.stripped.startsWith(s"/invalid/${schemaRef.stripped}")) ref :: acc
