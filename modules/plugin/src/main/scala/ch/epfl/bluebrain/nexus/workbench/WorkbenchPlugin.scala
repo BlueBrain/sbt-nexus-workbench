@@ -50,7 +50,7 @@ object WorkbenchPlugin extends AutoPlugin {
                            baseDir: File,
                            testDir: File): Seq[File] = {
     val file = target / "ch" / "epfl" / "bluebrain" / "nexus" / "workbench" / "WorkbenchSpec.scala"
-    if (file.exists()) Nil
+    if (file.exists()) Seq(file)
     else {
       val content =
         s"""|package ch.epfl.bluebrain.nexus.workbench
