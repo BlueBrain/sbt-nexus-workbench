@@ -40,7 +40,7 @@ object WorkbenchPlugin extends AutoPlugin {
       baseUriToken.value,
       (resourceDirectory in Compile).value,
       (resourceDirectory in Test).value
-    ),
+    )(streams.value),
     sourceGenerators in Test += generateWorkbenchSpec.taskValue
   )
 
@@ -48,9 +48,12 @@ object WorkbenchPlugin extends AutoPlugin {
                            baseUri: String,
                            baseUriToken: String,
                            baseDir: File,
-                           testDir: File): Seq[File] = {
+                           testDir: File)(streams: TaskStreams): Seq[File] = {
     val file = target / "ch" / "epfl" / "bluebrain" / "nexus" / "workbench" / "WorkbenchSpec.scala"
-    if (file.exists()) Nil
+    if (file.exists()) {
+      streams.log.info(s"Workbench spec '${file.getAbsolutePath}' already exists, skipping generation.")
+      Seq(file)
+    }
     else {
       val content =
         s"""|package ch.epfl.bluebrain.nexus.workbench
@@ -62,6 +65,7 @@ object WorkbenchPlugin extends AutoPlugin {
             |  override def testDir: String = "${testDir.getAbsolutePath}"
             |}""".stripMargin
       IO.write(file, content)
+      streams.log.info(s"Generated workbench spec '${file.getAbsolutePath}'.")
       Seq(file)
     }
   }
