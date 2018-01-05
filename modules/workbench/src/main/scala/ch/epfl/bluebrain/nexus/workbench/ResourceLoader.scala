@@ -5,13 +5,11 @@ import java.util.regex.Pattern
 import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.model.Uri.Path
 import cats.MonadError
-import cats.instances.list._
-import cats.syntax.flatMap._
-import cats.syntax.functor._
-import cats.syntax.traverse._
+import cats.implicits._
 import ch.epfl.bluebrain.nexus.workbench.WorkbenchErr._
 import io.circe.parser._
-import io.circe.{Json, ParsingFailure}
+import io.circe.syntax._
+import io.circe.{Json, JsonObject, ParsingFailure}
 
 import scala.annotation.tailrec
 import scala.io.Source
@@ -76,29 +74,30 @@ class ResourceLoader[F[_]](base: Uri, replacements: Map[String, String])(implici
   private def loadContext(json: Json): F[Json] = {
     def handleContextObj(ctx: Json): F[Json] = {
       (ctx.asString, ctx.asObject, ctx.asArray) match {
-        case (Some(str), _, _) => load(Uri(str))
-        case (_, Some(_), _)   => F.pure(Json.obj("@context" -> ctx))
+        case (Some(str), _, _) =>
+          load(Uri(str)).flatMap(_.hcursor.get[Json]("@context").map(handleContextObj).getOrElse(F.pure(Json.obj())))
+        case (_, Some(_), _) =>
+          F.pure(ctx)
         case (_, _, Some(arr)) =>
-          arr.toList
-            .map(v => handleContextObj(v))
-            .sequence
-            .map { list =>
-              list.foldLeft(Json.obj()) {
-                case (acc, el) => acc.deepMerge(el)
-              }
-            }
+          F.sequence(arr.map(handleContextObj))
+            .map(values =>
+              values.foldLeft(Json.obj()) { (acc, e) =>
+                acc deepMerge e
+            })
         case _ => F.raiseError(IllegalContextValue(ctx))
       }
     }
 
-    val loaded = for {
-      obj <- json.asObject
-      ctx <- obj("@context")
-    } yield handleContextObj(ctx)
+    def inner(jsonObj: JsonObject): F[JsonObject] =
+      F.sequence(jsonObj.toVector.map {
+          case ("@context", v) => handleContextObj(v).map("@context" -> _)
+          case (k, v)          => loadContext(v).map(k               -> _)
+        })
+        .map(JsonObject.fromIterable)
 
-    loaded
-      .map(_.map(ctx => json.deepMerge(ctx)))
-      .getOrElse(F.pure(json))
+    json.arrayOrObject[F[Json]](F.pure(json),
+                                arr => F.sequence(arr.map(loadContext)).map(Json.fromValues),
+                                obj => inner(obj).map(_.asJson))
   }
 
   private def stripTrailingSlashes(path: Path): Path = {

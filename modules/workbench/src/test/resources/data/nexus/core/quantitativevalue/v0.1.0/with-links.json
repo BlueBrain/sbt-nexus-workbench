@@ -1,0 +1,11 @@
+{
+  "@context": "{{base}}/contexts/common",
+  "schema:value": 3,
+  "schema:unitCode": "km",
+  "links": [
+    {
+      "@context":"{{base}}/contexts/links",
+      "self": "{{base}}/data/orgId/domainId/domainId/v0.0.1/d76df1e4-d57f-4614-b18c-a378087e524f?rev=1"
+    }
+  ]
+}
