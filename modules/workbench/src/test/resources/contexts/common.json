@@ -7,6 +7,10 @@
     "sh": "http://www.w3.org/ns/shacl#",
     "shext": "http://www.w3.org/ns/shacl/ext#",
     "schema": "http://schema.org/",
-    "prov": "http://www.w3.org/ns/prov#"
+    "prov": "http://www.w3.org/ns/prov#",
+    "nxv": "http://example.nexus.com/core/",
+    "links": {
+      "@id": "nxv:links"
+    }
   }
 }
