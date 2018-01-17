@@ -1,7 +1,7 @@
-val commonsVersion   = "0.5.0"
+val commonsVersion   = "0.5.30"
 val akkaHttpVersion  = "10.0.10"
 val scalaTestVersion = "3.0.4"
-val sbtIoVersion     = "1.0.1"
+val sbtIoVersion     = "1.1.0"
 
 lazy val shaclValidator = "ch.epfl.bluebrain.nexus" %% "shacl-validator" % commonsVersion
 lazy val akkaHttpCore   = "com.typesafe.akka"       %% "akka-http-core"  % akkaHttpVersion
@@ -52,7 +52,10 @@ lazy val noPublish = Seq(
 lazy val common = Seq(
   coverageFailOnMinimum := false,
   homepage := Some(new URL("https://github.com/BlueBrain/sbt-nexus-workbench")),
-  licenses := Seq(("Apache 2.0", new URL("https://github.com/BlueBrain/sbt-nexus-workbench/blob/master/LICENSE")))
+  licenses := Seq(("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))),
+  scmInfo := Some(
+    ScmInfo(url("https://github.com/BlueBrain/sbt-nexus-workbench"),
+            "scm:git:git@github.com:BlueBrain/sbt-nexus-workbench.git"))
 )
 
 addCommandAlias("review", ";clean;coverage;scapegoat;test;coverageReport;coverageAggregate")
