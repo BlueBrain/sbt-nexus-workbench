@@ -1,7 +1,7 @@
-val commonsVersion   = "0.5.30"
-val akkaHttpVersion  = "10.0.10"
+val commonsVersion   = "0.6.5"
+val akkaHttpVersion  = "10.0.11"
 val scalaTestVersion = "3.0.4"
-val sbtIoVersion     = "1.1.0"
+val sbtIoVersion     = "1.1.3"
 
 lazy val shaclValidator = "ch.epfl.bluebrain.nexus" %% "shacl-validator" % commonsVersion
 lazy val akkaHttpCore   = "com.typesafe.akka"       %% "akka-http-core"  % akkaHttpVersion

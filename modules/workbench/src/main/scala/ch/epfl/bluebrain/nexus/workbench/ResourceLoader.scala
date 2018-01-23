@@ -4,8 +4,8 @@ import java.util.regex.Pattern
 
 import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.model.Uri.Path
-import cats.MonadError
 import cats.implicits._
+import cats.{MonadError, Traverse}
 import ch.epfl.bluebrain.nexus.workbench.WorkbenchErr._
 import io.circe.parser._
 import io.circe.syntax._
@@ -79,7 +79,8 @@ class ResourceLoader[F[_]](base: Uri, replacements: Map[String, String])(implici
         case (_, Some(_), _) =>
           F.pure(ctx)
         case (_, _, Some(arr)) =>
-          F.sequence(arr.map(handleContextObj))
+          Traverse[Vector]
+            .sequence(arr.map(handleContextObj))
             .map(values =>
               values.foldLeft(Json.obj()) { (acc, e) =>
                 acc deepMerge e
@@ -89,14 +90,15 @@ class ResourceLoader[F[_]](base: Uri, replacements: Map[String, String])(implici
     }
 
     def inner(jsonObj: JsonObject): F[JsonObject] =
-      F.sequence(jsonObj.toVector.map {
+      Traverse[Vector]
+        .sequence(jsonObj.toVector.map {
           case ("@context", v) => handleContextObj(v).map("@context" -> _)
           case (k, v)          => loadContext(v).map(k               -> _)
         })
         .map(JsonObject.fromIterable)
 
     json.arrayOrObject[F[Json]](F.pure(json),
-                                arr => F.sequence(arr.map(loadContext)).map(Json.fromValues),
+                                arr => Traverse[Vector].sequence(arr.map(loadContext)).map(Json.fromValues),
                                 obj => inner(obj).map(_.asJson))
   }
 
