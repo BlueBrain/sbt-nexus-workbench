@@ -1,3 +1,28 @@
+/*
+scalafmt: {
+  style = defaultWithAlign
+  maxColumn = 150
+  align.tokens = [
+    { code = "=>", owner = "Case" }
+    { code = "?", owner = "Case" }
+    { code = "extends", owner = "Defn.(Class|Trait|Object)" }
+    { code = "//", owner = ".*" }
+    { code = "{", owner = "Template" }
+    { code = "}", owner = "Template" }
+    { code = ":=", owner = "Term.ApplyInfix" }
+    { code = "++=", owner = "Term.ApplyInfix" }
+    { code = "+=", owner = "Term.ApplyInfix" }
+    { code = "%", owner = "Term.ApplyInfix" }
+    { code = "%%", owner = "Term.ApplyInfix" }
+    { code = "%%%", owner = "Term.ApplyInfix" }
+    { code = "->", owner = "Term.ApplyInfix" }
+    { code = "?", owner = "Term.ApplyInfix" }
+    { code = "<-", owner = "Enumerator.Generator" }
+    { code = "?", owner = "Enumerator.Generator" }
+    { code = "=", owner = "(Enumerator.Val|Defn.(Va(l|r)|Def|Type))" }
+  ]
+}
+ */
 val commonsVersion   = "0.10.8"
 val akkaVersion      = "2.5.10"
 val akkaHttpVersion  = "10.1.0"
@@ -14,7 +39,7 @@ lazy val sbtIo          = "org.scala-sbt"           %% "io"              % sbtIo
 lazy val workbench = project
   .in(file("modules/workbench"))
   .settings(
-    name := "nexus-workbench",
+    name       := "nexus-workbench",
     moduleName := "nexus-workbench",
     libraryDependencies ++= Seq(
       akkaActor,
@@ -30,9 +55,9 @@ lazy val workbench = project
 lazy val plugin = project
   .in(file("modules/plugin"))
   .settings(
-    name := "sbt-nexus-workbench",
-    moduleName := "sbt-nexus-workbench",
-    sbtPlugin := true,
+    name                  := "sbt-nexus-workbench",
+    moduleName            := "sbt-nexus-workbench",
+    sbtPlugin             := true,
     coverageFailOnMinimum := false
   )
 
@@ -40,8 +65,8 @@ lazy val root = project
   .in(file("."))
   .settings(
     noPublish,
-    name := "workbench",
-    moduleName := "workbench",
+    name        := "workbench",
+    moduleName  := "workbench",
     description := "Nexus Workbench"
   )
   .aggregate(workbench, plugin)
@@ -50,17 +75,15 @@ lazy val root = project
 
 lazy val noPublish = Seq(
   publishLocal := {},
-  publish := {}
+  publish      := {}
 )
 
 inThisBuild(
   Seq(
     resolvers += Resolver.bintrayRepo("bogdanromanx", "maven"),
-    homepage := Some(new URL("https://github.com/BlueBrain/sbt-nexus-workbench")),
-    licenses := Seq(("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))),
-    scmInfo := Some(
-      ScmInfo(url("https://github.com/BlueBrain/sbt-nexus-workbench"),
-              "scm:git:git@github.com:BlueBrain/sbt-nexus-workbench.git")),
+    homepage  := Some(new URL("https://github.com/BlueBrain/sbt-nexus-workbench")),
+    licenses  := Seq(("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))),
+    scmInfo   := Some(ScmInfo(url("https://github.com/BlueBrain/sbt-nexus-workbench"), "scm:git:git@github.com:BlueBrain/sbt-nexus-workbench.git")),
     developers := List(
       Developer("bogdanromanx", "Bogdan Roman", "noreply@epfl.ch", url("https://bluebrain.epfl.ch/")),
       Developer("hygt", "Henry Genet", "noreply@epfl.ch", url("https://bluebrain.epfl.ch/")),
@@ -68,8 +91,8 @@ inThisBuild(
       Developer("wwajerowicz", "Wojtek Wajerowicz", "noreply@epfl.ch", url("https://bluebrain.epfl.ch/"))
     ),
     // These are the sbt-release-early settings to configure
-    releaseEarlyWith := BintrayPublisher,
-    releaseEarlyNoGpg := true,
+    releaseEarlyWith              := BintrayPublisher,
+    releaseEarlyNoGpg             := true,
     releaseEarlyEnableSyncToMaven := false
   )
 )
