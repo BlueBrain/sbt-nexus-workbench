@@ -65,9 +65,10 @@ lazy val root = project
   .in(file("."))
   .settings(
     noPublish,
-    name        := "workbench",
-    moduleName  := "workbench",
-    description := "Nexus Workbench"
+    name                  := "workbench",
+    moduleName            := "workbench",
+    description           := "Nexus Workbench",
+    coverageFailOnMinimum := false
   )
   .aggregate(workbench, plugin)
 
