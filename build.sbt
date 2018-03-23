@@ -24,14 +24,11 @@ scalafmt: {
 }
  */
 val commonsVersion   = "0.10.8"
-val akkaVersion      = "2.5.10"
-val akkaHttpVersion  = "10.1.0"
+val akkaHttpVersion  = "10.0.11"
 val scalaTestVersion = "3.0.5"
 val sbtIoVersion     = "1.1.4"
 
 lazy val shaclValidator = "ch.epfl.bluebrain.nexus" %% "shacl-validator" % commonsVersion
-lazy val akkaActor      = "com.typesafe.akka"       %% "akka-actor"      % akkaVersion
-lazy val akkaStream     = "com.typesafe.akka"       %% "akka-stream"     % akkaVersion
 lazy val akkaHttpCore   = "com.typesafe.akka"       %% "akka-http-core"  % akkaHttpVersion
 lazy val scalaTest      = "org.scalatest"           %% "scalatest"       % scalaTestVersion
 lazy val sbtIo          = "org.scala-sbt"           %% "io"              % sbtIoVersion
@@ -42,8 +39,6 @@ lazy val workbench = project
     name       := "nexus-workbench",
     moduleName := "nexus-workbench",
     libraryDependencies ++= Seq(
-      akkaActor,
-      akkaStream,
       akkaHttpCore,
       shaclValidator,
       sbtIo,
