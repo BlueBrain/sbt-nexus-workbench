@@ -23,7 +23,8 @@ lazy val workbench = project
       shaclValidator,
       sbtIo,
       scalaTest
-    )
+    ),
+    coverageFailOnMinimum := false
   )
 
 lazy val plugin = project
@@ -31,7 +32,8 @@ lazy val plugin = project
   .settings(
     name := "sbt-nexus-workbench",
     moduleName := "sbt-nexus-workbench",
-    sbtPlugin := true
+    sbtPlugin := true,
+    coverageFailOnMinimum := false
   )
 
 lazy val root = project
@@ -53,7 +55,6 @@ lazy val noPublish = Seq(
 
 inThisBuild(
   Seq(
-    coverageFailOnMinimum := false,
     resolvers += Resolver.bintrayRepo("bogdanromanx", "maven"),
     homepage := Some(new URL("https://github.com/BlueBrain/sbt-nexus-workbench")),
     licenses := Seq(("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))),
