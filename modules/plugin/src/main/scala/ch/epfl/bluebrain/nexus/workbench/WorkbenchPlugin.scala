@@ -31,10 +31,23 @@ object WorkbenchPlugin extends AutoPlugin {
       "target-export-schemas",
       "The default location where schemas are exported."
     )
+    val targetCollectedResources = SettingKey[File](
+      "target-collected-resources",
+      "The default location where collected resources are stored."
+    )
+    val typeCollectedResources = SettingKey[String](
+      "type-collected-resources",
+      "The default collected resource types."
+    )
     val exportSchemas = InputKey[Unit](
       "export-schemas",
       "Exports all schemas in the directory identified by 'target-export-schemas'; " +
         "the task accepts the 'baseUri' and 'exportTarget' location optional positional arguments."
+    )
+    val collectResources = InputKey[Unit](
+      "collect-resources",
+      "Collect all resources in the classpath with a type identified by 'type-collected-resources' and stored them in the directory identified by 'target-collected-resources';" +
+        "the task accepts the 'resourceType' and 'collectTarget' location optional positional arguments."
     )
   }
   object autoImport extends Keys
@@ -53,6 +66,8 @@ object WorkbenchPlugin extends AutoPlugin {
     )(streams.value),
     sourceGenerators in Test += generateWorkbenchSpec.taskValue,
     targetExportSchemas := target.value / "exported",
+    targetCollectedResources := target.value / "collected",
+    typeCollectedResources := "all",
     exportSchemas := {
       Def.inputTaskDyn {
         val args = spaceDelimited("<arg>")
@@ -79,6 +94,36 @@ object WorkbenchPlugin extends AutoPlugin {
         val arguments = completeArgs.mkString(" ")
         streams.value.log.info(s"Running export-schemas with '$arguments'")
         runTask(Test, "ch.epfl.bluebrain.nexus.workbench.SchemaExport", completeArgs: _*)
+      }.evaluated
+    },
+    collectResources := {
+      Def.inputTaskDyn {
+        val args = spaceDelimited("<arg>")
+          .examples(
+            "collectResources  <baseUri> <collect_target> <resource_type>",
+            "collectResources http://localhost:8080/v0 ./target/collected schemas"
+          )
+          .parsed
+          .toList
+        val completeArgs = args match {
+          case Nil =>
+            List(baseUri.value,
+                 baseUriToken.value,
+                 targetCollectedResources.value.getAbsolutePath,
+                 typeCollectedResources.value)
+          case first :: Nil =>
+            List(first,
+                 baseUriToken.value,
+                 targetCollectedResources.value.getAbsolutePath,
+                 typeCollectedResources.value)
+          case first :: second :: Nil =>
+            List(first, baseUriToken.value, second, typeCollectedResources.value)
+          case first :: second :: third :: _ =>
+            List(first, baseUriToken.value, second, third)
+        }
+        val arguments = completeArgs.mkString(" ")
+        streams.value.log.info(s"Running collect-resources with '$arguments'")
+        runTask(Test, "ch.epfl.bluebrain.nexus.workbench.CollectResources", completeArgs: _*)
       }.evaluated
     }
   )

@@ -30,9 +30,9 @@ class ResourceLoader[F[_]](base: Uri, replacements: Map[String, String])(implici
     *
     * @param resource the resource uri
     */
-  def apply(resource: Uri): F[Json] =
+  def apply(resource: Uri, loadCtx: Boolean = true): F[Json] =
     if (!resource.isAbsolute) F.raiseError(NonAbsoluteUri(resource))
-    else load(resource)
+    else load(resource, loadCtx)
 
   private[workbench] final val baseUri: Uri =
     base.copy(path = stripTrailingSlashes(base.path))
@@ -54,7 +54,7 @@ class ResourceLoader[F[_]](base: Uri, replacements: Map[String, String])(implici
     }
   }
 
-  private def load(resource: Uri): F[Json] = {
+  private def load(resource: Uri, loadCtx: Boolean = false): F[Json] = {
     resolve(resource).flatMap { address =>
       val replaced = Try {
         val asString = Source.fromInputStream(getClass.getResourceAsStream(address.toString())).mkString
@@ -66,7 +66,8 @@ class ResourceLoader[F[_]](base: Uri, replacements: Map[String, String])(implici
       replaced.flatMap(str => parse(str)) match {
         case Left(_: ParsingFailure) => F.raiseError(InvalidJson(address))
         case Left(NonFatal(_))       => F.raiseError(UnableToLoad(address))
-        case Right(json)             => loadContext(json)
+        case Right(json) if loadCtx  => loadContext(json)
+        case Right(json)             => F.pure(json)
       }
     }
   }
