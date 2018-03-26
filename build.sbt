@@ -27,22 +27,26 @@ val commonsVersion   = "0.10.8"
 val akkaHttpVersion  = "10.0.11"
 val scalaTestVersion = "3.0.5"
 val sbtIoVersion     = "1.1.4"
+val springVersion    = "5.0.4.RELEASE"
 
 lazy val shaclValidator = "ch.epfl.bluebrain.nexus" %% "shacl-validator" % commonsVersion
 lazy val akkaHttpCore   = "com.typesafe.akka"       %% "akka-http-core"  % akkaHttpVersion
 lazy val scalaTest      = "org.scalatest"           %% "scalatest"       % scalaTestVersion
 lazy val sbtIo          = "org.scala-sbt"           %% "io"              % sbtIoVersion
+lazy val spring         = "org.springframework"     % "spring-core"      % springVersion
 
 lazy val workbench = project
   .in(file("modules/workbench"))
   .settings(
     name       := "nexus-workbench",
     moduleName := "nexus-workbench",
+    resolvers  += Resolver.bintrayRepo("spring", "jars"),
     libraryDependencies ++= Seq(
       akkaHttpCore,
       shaclValidator,
       sbtIo,
-      scalaTest
+      scalaTest,
+      spring
     ),
     coverageFailOnMinimum := false
   )
