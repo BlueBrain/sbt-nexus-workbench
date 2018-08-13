@@ -23,15 +23,15 @@ scalafmt: {
   ]
 }
  */
-val akkaHttpVersion    = "10.1.3"
-val catsVersion        = "1.1.0"
-val circeVersion       = "0.9.3"
-val commonsVersion     = "0.10.17"
-val journalVersion     = "3.0.19"
-val rdfVersion         = "0.2.16"
-val scalaTestVersion   = "3.0.5"
-val sbtIoVersion       = "1.1.10"
-val springVersion      = "5.0.7.RELEASE"
+val akkaHttpVersion  = "10.1.3"
+val catsVersion      = "1.1.0"
+val circeVersion     = "0.9.3"
+val commonsVersion   = "0.10.17"
+val journalVersion   = "3.0.19"
+val rdfVersion       = "0.2.16"
+val scalaTestVersion = "3.0.5"
+val sbtIoVersion     = "1.1.10"
+val springVersion    = "5.0.7.RELEASE"
 
 lazy val akkaHttpCore     = "com.typesafe.akka"       %% "akka-http-core"              % akkaHttpVersion
 lazy val catsCore         = "org.typelevel"           %% "cats-core"                   % catsVersion
