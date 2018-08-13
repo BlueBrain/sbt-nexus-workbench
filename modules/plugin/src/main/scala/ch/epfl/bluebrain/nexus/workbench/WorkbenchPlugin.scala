@@ -76,7 +76,7 @@ object WorkbenchPlugin extends AutoPlugin {
     testIgnoreShacl := {
       Def
         .taskDyn[Unit] {
-          runTask(Test, "ch.epfl.bluebrain.nexus.workbench.WorkbenchSpec.ignoreShacl", "ignoreShacl=true")
+          runTask(Test, "ch.epfl.bluebrain.nexus.workbench.WorkbenchSpec", "ignoreShacl=true")
         }
         .value
     },
@@ -157,7 +157,7 @@ object WorkbenchPlugin extends AutoPlugin {
             |  override def testDir: String = "${testDir.getAbsolutePath}"
             |}
             |object WorkbenchSpec {
-            |  def ignoreShacl(args: Array[String]): Unit = {
+            |  def main(@com.github.ghik.silencer.silent args: Array[String]): Unit = {
             |    (new WorkbenchSpec).execute(configMap = org.scalatest.ConfigMap("ignoreShacl" -> "false"))
             |  }
             |}""".stripMargin
