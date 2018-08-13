@@ -12,6 +12,6 @@ class WorkbenchSpec extends WorkbenchSpecLike {
 
 object WorkbenchSpec {
   def main(@com.github.ghik.silencer.silent args: Array[String]): Unit = {
-    (new WorkbenchSpec).execute(configMap = org.scalatest.ConfigMap("ignoreShacl" -> "false"))
+    (new WorkbenchSpec).execute(configMap = org.scalatest.ConfigMap("ignoreShacl" -> "true"))
   }
 }
