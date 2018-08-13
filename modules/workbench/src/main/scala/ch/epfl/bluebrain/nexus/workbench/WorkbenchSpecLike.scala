@@ -4,13 +4,12 @@ import java.io.File
 
 import akka.http.scaladsl.model.Uri
 import cats.instances.try_._
-import ch.epfl.bluebrain.nexus.commons.shacl.validator.{ShaclSchema, ShaclValidator}
-import org.scalatest.WordSpecLike
+import org.scalatest._
 import sbt.io.syntax._
 
 import scala.util.Try
 
-trait WorkbenchSpecLike extends WordSpecLike with ValidationMatchers {
+trait WorkbenchSpecLike extends WordSpecLike with ValidationMatchers with BeforeAndAfterAllConfigMap {
 
   def baseUri: String
 
@@ -20,12 +19,17 @@ trait WorkbenchSpecLike extends WordSpecLike with ValidationMatchers {
 
   def testDir: String
 
-  private val bd        = new File(baseDir).getAbsoluteFile
-  private val td        = new File(testDir).getAbsoluteFile
-  private val base      = Uri(baseUri)
-  private val loader    = new ResourceLoader[Try](Uri(baseUri), Map(baseUriToken -> baseUri))
-  private val resolver  = new ClasspathResolver[Try](loader)
-  private val validator = ShaclValidator(resolver)
+  private val bd                   = new File(baseDir).getAbsoluteFile
+  private val td                   = new File(testDir).getAbsoluteFile
+  private val base                 = Uri(baseUri)
+  private val loader               = new ResourceLoader[Try](Uri(baseUri), Map(baseUriToken -> baseUri))
+  private val resolver             = new ClasspathResolver[Try](loader)
+  private val validator            = ShaclValidator(resolver)
+  private var ignoreShacl: Boolean = false
+
+  override def beforeAll(configMap: ConfigMap) = {
+    ignoreShacl = configMap.getWithDefault("ignoreShacl", "false").toBoolean
+  }
 
   private def schemas(): List[SchemaRef] = {
     val finder = bd * "schemas" * "*" * "*" * "*" * "*.json"
@@ -69,11 +73,18 @@ trait WorkbenchSpecLike extends WordSpecLike with ValidationMatchers {
         ShaclSchema(loader(schemaRef.uri).value)
       }
 
+      "be validated correctly against the SHACL schema" in {
+        assume(!ignoreShacl)
+        val schema = ShaclSchema(loader(schemaRef.uri).value)
+        validator(schema).shouldConform
+      }
+
       val validInstances = valid(schemaRef)
       if (validInstances.nonEmpty) {
         "validate when applied to an instance" when {
           val schema = ShaclSchema(loader(schemaRef.uri).value)
-          validInstances.foreach { implicit ref =>
+          validInstances.foreach { ref =>
+            implicit val refOpt: Option[InstanceRef] = Some(ref)
             if (ref.isIgnored) {
               s"using '${ref.stripped}'" ignore {
                 val instance = loader(ref.uri).value
@@ -94,14 +105,17 @@ trait WorkbenchSpecLike extends WordSpecLike with ValidationMatchers {
         "NOT validate when applied to an instance" when {
           val schema = ShaclSchema(loader(schemaRef.uri).value)
           invalidInstances.foreach { implicit ref =>
+            implicit val refOpt: Option[InstanceRef] = Some(ref)
             if (ref.isIgnored) {
               s"using '${ref.stripped}'" ignore {
                 val instance = loader(ref.uri).value
+                validator(schema).shouldConform
                 validator(schema, instance).shouldNotConform
               }
             } else {
               s"using '${ref.stripped}'" in {
                 val instance = loader(ref.uri).value
+                validator(schema).shouldConform
                 validator(schema, instance).shouldNotConform
               }
             }

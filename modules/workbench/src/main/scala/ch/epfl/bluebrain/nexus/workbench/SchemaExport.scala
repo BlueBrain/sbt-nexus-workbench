@@ -3,9 +3,9 @@ package ch.epfl.bluebrain.nexus.workbench
 import java.io.File
 
 import akka.http.scaladsl.model.Uri
+import cats.instances.try_._
 import sbt.io._
 import sbt.io.syntax._
-import cats.instances.try_._
 
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
@@ -14,6 +14,7 @@ import scala.util.{Failure, Success, Try}
   * Exports the collection of schemas in a configured output folder, by recursively processing the contexts such that
   * each exported schema has a self contained context.
   */
+// $COVERAGE-OFF$
 object SchemaExport {
 
   def main(args: Array[String]): Unit = {
@@ -59,3 +60,4 @@ object SchemaExport {
   }
 
 }
+// $COVERAGE-ON$

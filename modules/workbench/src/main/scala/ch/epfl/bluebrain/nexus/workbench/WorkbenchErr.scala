@@ -2,7 +2,6 @@ package ch.epfl.bluebrain.nexus.workbench
 
 import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.model.Uri.Path
-import ch.epfl.bluebrain.nexus.commons.types.Err
 import io.circe.Json
 
 /**
