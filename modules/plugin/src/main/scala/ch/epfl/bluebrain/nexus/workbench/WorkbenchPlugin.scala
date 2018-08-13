@@ -157,7 +157,7 @@ object WorkbenchPlugin extends AutoPlugin {
             |  override def testDir: String = "${testDir.getAbsolutePath}"
             |}
             |object WorkbenchSpec {
-            |  def main(args: Array[String]): Unit = {
+            |  def ignoreShacl(args: Array[String]): Unit = {
             |    (new WorkbenchSpec).execute(configMap = org.scalatest.ConfigMap("ignoreShacl" -> "false"))
             |  }
             |}""".stripMargin
