@@ -25,6 +25,24 @@
               "path": "schema:value",
               "minCount": 1,
               "maxCount": 1
+            },
+            {
+              "path": "schema:dateTime",
+              "minCount": 0,
+              "maxCount": 1,
+              "datatype": "xsd:dateTime"
+            },
+            {
+              "path": "schema:date",
+              "minCount": 0,
+              "maxCount": 1,
+              "datatype": "xsd:date"
+            },
+            {
+              "path": "schema:time",
+              "minCount": 0,
+              "maxCount": 1,
+              "datatype": "xsd:time"
             }
           ]
         },

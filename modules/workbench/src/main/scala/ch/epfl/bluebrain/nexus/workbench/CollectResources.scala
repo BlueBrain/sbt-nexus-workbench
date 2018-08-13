@@ -1,16 +1,17 @@
 package ch.epfl.bluebrain.nexus.workbench
 
-import scala.util.control.NonFatal
-
-import scala.util.{Failure, Success, Try}
 import cats.instances.try_._
 import sbt.io._
+
+import scala.util.control.NonFatal
+import scala.util.{Failure, Success, Try}
 
 /**
   * Collects the schemas and/or contexts present in the classpath in a configured output folder,
   * by recursively replacing the baseUriToken by a configured baseUri.
   *
   */
+// $COVERAGE-OFF$
 object CollectResources {
 
   def main(args: Array[String]): Unit = {
@@ -40,8 +41,9 @@ object CollectResources {
                              resourceType: String,
                              collectTarget: String): Unit = {
     import java.io.File
-    import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+
     import akka.http.scaladsl.model.Uri
+    import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
     val loader   = new ResourceLoader[Try](Uri(baseUri), Map(baseUriToken -> baseUri))
     val cl       = getClass.getClassLoader
@@ -71,3 +73,4 @@ object CollectResources {
       }
   }
 }
+// $COVERAGE-ON$

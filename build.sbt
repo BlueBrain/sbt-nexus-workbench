@@ -23,17 +23,27 @@ scalafmt: {
   ]
 }
  */
-val commonsVersion   = "0.10.8"
-val akkaHttpVersion  = "10.0.11"
-val scalaTestVersion = "3.0.5"
-val sbtIoVersion     = "1.1.4"
-val springVersion    = "5.0.4.RELEASE"
+val akkaHttpVersion    = "10.1.3"
+val catsVersion        = "1.1.0"
+val circeVersion       = "0.9.3"
+val commonsVersion     = "0.10.17"
+val journalVersion     = "3.0.19"
+val rdfVersion         = "0.2.16"
+val scalaTestVersion   = "3.0.5"
+val sbtIoVersion       = "1.1.10"
+val springVersion      = "5.0.7.RELEASE"
 
-lazy val shaclValidator = "ch.epfl.bluebrain.nexus" %% "shacl-validator" % commonsVersion
-lazy val akkaHttpCore   = "com.typesafe.akka"       %% "akka-http-core"  % akkaHttpVersion
-lazy val scalaTest      = "org.scalatest"           %% "scalatest"       % scalaTestVersion
-lazy val sbtIo          = "org.scala-sbt"           %% "io"              % sbtIoVersion
-lazy val spring         = "org.springframework"     % "spring-core"      % springVersion
+lazy val akkaHttpCore     = "com.typesafe.akka"       %% "akka-http-core"              % akkaHttpVersion
+lazy val catsCore         = "org.typelevel"           %% "cats-core"                   % catsVersion
+lazy val circeCore        = "io.circe"                %% "circe-core"                  % circeVersion
+lazy val commonsHttp      = "ch.epfl.bluebrain.nexus" %% "commons-http"                % commonsVersion
+lazy val commonsTests     = "ch.epfl.bluebrain.nexus" %% "commons-test"                % commonsVersion
+lazy val topQuadrantShacl = "ch.epfl.bluebrain.nexus" %% "shacl-topquadrant-validator" % commonsVersion
+lazy val journal          = "io.verizon.journal"      %% "core"                        % journalVersion
+lazy val rdfCirce         = "ch.epfl.bluebrain.nexus" %% "rdf-circe"                   % rdfVersion
+lazy val scalaTest        = "org.scalatest"           %% "scalatest"                   % scalaTestVersion
+lazy val sbtIo            = "org.scala-sbt"           %% "io"                          % sbtIoVersion
+lazy val spring           = "org.springframework"     % "spring-core"                  % springVersion
 
 lazy val workbench = project
   .in(file("modules/workbench"))
@@ -43,10 +53,16 @@ lazy val workbench = project
     resolvers  += Resolver.bintrayRepo("spring", "jars"),
     libraryDependencies ++= Seq(
       akkaHttpCore,
-      shaclValidator,
+      catsCore,
+      circeCore,
+      commonsHttp,
+      commonsTests,
+      journal,
+      rdfCirce,
       sbtIo,
       scalaTest,
-      spring
+      spring,
+      topQuadrantShacl
     ),
     coverageFailOnMinimum := false
   )

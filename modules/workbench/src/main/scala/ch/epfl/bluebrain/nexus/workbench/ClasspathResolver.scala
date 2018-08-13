@@ -10,8 +10,7 @@ import cats.syntax.applicativeError._
 import cats.syntax.flatMap._
 import cats.syntax.functor._
 import cats.syntax.traverse._
-import ch.epfl.bluebrain.nexus.commons.shacl.validator.ShaclValidatorErr._
-import ch.epfl.bluebrain.nexus.commons.shacl.validator.{ImportResolver, ShaclSchema}
+import ch.epfl.bluebrain.nexus.workbench.ShaclValidatorErr._
 import org.apache.jena.rdf.model.{ModelFactory, ResourceFactory}
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 

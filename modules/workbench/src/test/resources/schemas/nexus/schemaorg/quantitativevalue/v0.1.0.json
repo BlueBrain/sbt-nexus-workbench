@@ -35,7 +35,7 @@
           "path": "schema:value",
           "name": "Value",
           "description": "The value of the quantitative value or property value node.",
-          "datatype": "xsd:float"
+          "datatype": "xsd:double"
         }
       ]
     }
