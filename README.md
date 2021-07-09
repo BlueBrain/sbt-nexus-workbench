@@ -12,3 +12,11 @@ Nexus platform.
 The project depends on the [sbt nexus](https://github.com/bluebrain/sbt-nexus) plugin and
 [nexus-commons](https://github.com/bluebrain/nexus-commons).  Until stable versions of these dependencies are released,
 in order to build the project, these dependencies need to be published locally.
+
+## Funding & Acknowledgment
+
+The development of this software was supported by funding to the Blue Brain Project, a research center of the École polytechnique fédérale de
+Lausanne (EPFL), from the Swiss government's ETH Board of the Swiss Federal Institutes of Technology.
+
+Copyright © 2015-2021 Blue Brain Project/EPFL
+
